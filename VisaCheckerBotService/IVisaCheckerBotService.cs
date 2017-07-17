@@ -8,18 +8,44 @@ using System.Text;
 
 namespace VisaCheckerBotService
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
     [ServiceContract]
-    public interface IService1
+    public interface IVisaCheckerBotService
     {
+        [OperationContract]
+        bool Subscribe(string embassy, long id);
 
         [OperationContract]
-        string GetData(int value);
+        bool Unsubscribe(string embassy, long id);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        List<string> GetBusyDates(string embassy);
 
-        // TODO: Add your service operations here
+        [OperationContract]
+        List<string> GetFreeDates(string embassy);
+
+        [OperationContract]
+        List<string> GetRegisteredEmbassies();
+
+        [OperationContract]
+        void SaveAll();
+
+        [OperationContract]
+        void Save(string embassy);
+
+        [OperationContract]
+        void LoadAll();
+
+        [OperationContract]
+        void Load(string embassy);
+
+        [OperationContract]
+        long GetTimeout(string embassy);
+
+        [OperationContract]
+        void SetTimeout(string embassy, long value);
+
+        [OperationContract]
+        DateTime GetLastUpdate(string embassy);
     }
 
 

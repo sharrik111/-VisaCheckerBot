@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisaCheckerBotService", "VisaCheckerBotService\VisaCheckerBotService.csproj", "{08D4F78B-9322-48CE-A464-52B50889C250}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Checkers", "Checkers\Checkers.csproj", "{FCA3631F-0352-41FC-8B4C-16A44D87E301}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{08D4F78B-9322-48CE-A464-52B50889C250}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08D4F78B-9322-48CE-A464-52B50889C250}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08D4F78B-9322-48CE-A464-52B50889C250}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCA3631F-0352-41FC-8B4C-16A44D87E301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA3631F-0352-41FC-8B4C-16A44D87E301}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCA3631F-0352-41FC-8B4C-16A44D87E301}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCA3631F-0352-41FC-8B4C-16A44D87E301}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
