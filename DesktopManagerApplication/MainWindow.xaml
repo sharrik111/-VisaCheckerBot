@@ -1,0 +1,122 @@
+﻿<metroControls:MetroWindow x:Class="DesktopManagerApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:metroControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DesktopManagerApplication"
+        mc:Ignorable="d"
+                           DataContext="{StaticResource MainWindowViewModel}"
+        Title="Manager application" Height="350" Width="525">
+    <metroControls:MetroWindow.Resources>
+        <Image x:Key="RefreshImage" Source="Resources/Refresh.png" Height="15"
+                           x:Shared="False"/>
+        <Style x:Key="ImageButton" TargetType="{x:Type Button}">
+            <Setter Property="Content" Value="{StaticResource RefreshImage}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </metroControls:MetroWindow.Resources>
+    <metroControls:MetroWindow.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding SaveCommand, Mode=OneTime}"/>
+        <KeyBinding Key="L" Modifiers="Ctrl" Command="{Binding LoadCommand, Mode=OneTime}"/>
+        <KeyBinding Key="U" Modifiers="Ctrl" Command="{Binding UpdateCommand, Mode=OneTime}"/>
+    </metroControls:MetroWindow.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Header="Save"
+                          Command="{Binding SaveCommand, Mode=OneTime}"
+                          InputGestureText="Ctrl+S"
+                          />
+                <MenuItem Header="Load"
+                          Command="{Binding LoadCommand, Mode=OneTime}"
+                          InputGestureText="Ctrl+L"/>
+                <Separator/>
+                <MenuItem Header="Update"
+                          Command="{Binding UpdateCommand, Mode=OneTime}"
+                          InputGestureText="Ctrl+U"/>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1"
+              Margin="5 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Margin="0 5"
+                Grid.ColumnSpan="2"
+                Foreground="Red"
+                       Text="{Binding Error, Mode=OneWay}"/>
+            <ComboBox Grid.Row="1"
+                      Margin="0 5"
+                      ItemsSource="{Binding RegisteredEmbassies, Mode=OneTime}"
+                      SelectedItem="{Binding SelectedEmbassy}"
+                      HorizontalAlignment="Stretch"
+                      />
+            <TextBox Text="{Binding Timeout, UpdateSourceTrigger=PropertyChanged, Delay=1000}"
+                     Grid.Row="1"
+                     Grid.Column="1"
+                     HorizontalAlignment="Right"
+                     Margin="5"
+                     Width="100"/>
+            <Grid Grid.Row="2"
+                        Margin="0 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                    <Style TargetType="{x:Type ListBox}">
+                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"/>
+                    </Style>
+                </Grid.Resources>
+                <StackPanel VerticalAlignment="Center">
+                    <Button Style="{StaticResource ImageButton}"
+                            Command="{Binding BusyDatesCommand}"/>
+                    <TextBlock Text="Busy dates: "/>
+                </StackPanel>
+                <ListBox Grid.Column="1"
+                        ItemsSource="{Binding BusyDates}"/>
+                <StackPanel VerticalAlignment="Center"
+                            Grid.Row="2">
+                    <Button Style="{StaticResource ImageButton}"
+                            Command="{Binding FreeDatesCommand}"/>
+                    <TextBlock 
+                    Text="Free dates: "/>
+                </StackPanel>
+                <ListBox Grid.Row="2"
+                         Grid.Column="1"
+                    ItemsSource="{Binding FreeDates}"/>
+            </Grid>
+        </Grid>
+        <StatusBar Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="0 0 5 0"
+                        Command="{Binding LastUpdateCommand, Mode=OneTime}"
+                        Style="{StaticResource ImageButton}"/>
+                <TextBlock Text="Last update: "/>
+                <TextBlock Text="{Binding LastUpdate, Mode=OneWay}"/>
+            </StackPanel>
+        </StatusBar>
+    </Grid>
+</metroControls:MetroWindow>

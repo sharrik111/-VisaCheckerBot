@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisaCheckerBotService", "Vi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Checkers", "Checkers\Checkers.csproj", "{FCA3631F-0352-41FC-8B4C-16A44D87E301}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopManagerApplication", "DesktopManagerApplication\DesktopManagerApplication.csproj", "{C1397958-DA68-43FE-8844-DE5A57102F52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopManagerApplication.ViewModels", "DesktopManagerApplication.ViewModels\DesktopManagerApplication.ViewModels.csproj", "{D6576B62-8BA9-45E8-A128-573D2EAF0BFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{FCA3631F-0352-41FC-8B4C-16A44D87E301}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCA3631F-0352-41FC-8B4C-16A44D87E301}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCA3631F-0352-41FC-8B4C-16A44D87E301}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1397958-DA68-43FE-8844-DE5A57102F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1397958-DA68-43FE-8844-DE5A57102F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1397958-DA68-43FE-8844-DE5A57102F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1397958-DA68-43FE-8844-DE5A57102F52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6576B62-8BA9-45E8-A128-573D2EAF0BFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6576B62-8BA9-45E8-A128-573D2EAF0BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6576B62-8BA9-45E8-A128-573D2EAF0BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6576B62-8BA9-45E8-A128-573D2EAF0BFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

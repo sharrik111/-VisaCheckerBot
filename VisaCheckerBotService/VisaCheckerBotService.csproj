@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MessageTypes.cs" />
+    <Compile Include="TestCheckerBotService.cs" />
     <Compile Include="VisaCheckerBotService.svc.cs">
       <DependentUpon>VisaCheckerBotService.svc</DependentUpon>
     </Compile>
