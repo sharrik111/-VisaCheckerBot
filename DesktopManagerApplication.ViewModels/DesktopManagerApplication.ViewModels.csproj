@@ -45,6 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Checkers\Checkers.csproj">
+      <Project>{FCA3631F-0352-41FC-8B4C-16A44D87E301}</Project>
+      <Name>Checkers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VisaCheckerBotService\VisaCheckerBotService.csproj">
       <Project>{08d4f78b-9322-48ce-a464-52b50889c250}</Project>
       <Name>VisaCheckerBotService</Name>

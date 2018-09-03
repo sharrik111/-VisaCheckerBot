@@ -48,6 +48,7 @@
     <Compile Include="Lithuania\LithuaniaChecker.cs" />
     <Compile Include="LocalExtensions.cs" />
     <Compile Include="NotifySubscriberCallback.cs" />
+    <Compile Include="Schedule.cs" />
     <Compile Include="Storage\FileStreamStorageService.cs" />
     <Compile Include="Storage\IStorageService.cs" />
     <Compile Include="VisaChecker.cs" />

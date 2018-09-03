@@ -19,14 +19,15 @@ namespace VisaCheckerBotService
 
         public VisaCheckerBotService()
         {
-            // SelfActivator = new Timer(SelfActivate, null, new TimeSpan(0), new TimeSpan(14, 0, 0, 0));
             Bot = new TelegramBotClient(TelegramBotToken);
             Bot.OnMessage += MessageReceived;
             EmbassiesCheckers = new Dictionary<string, VisaChecker>()
             {
-                { Checkers.Lithuania.LithuaniaChecker.Identifier, new Checkers.Lithuania.LithuaniaChecker(Callback, 180000) }
+                {
+                    Checkers.Lithuania.LithuaniaChecker.Identifier, new Checkers.Lithuania.LithuaniaChecker(Callback, 300000) { Schedule = new Schedule(8, 20) }
+                }
             };
-            foreach(string id in EmbassiesCheckers.Keys)
+            foreach (string id in EmbassiesCheckers.Keys)
             {
                 EmbassiesCheckers[id].ErrorOccured += ErrorOccured;
             }
@@ -46,7 +47,7 @@ namespace VisaCheckerBotService
                 SaveAll();
             }
             catch { }
-            foreach(string id in EmbassiesCheckers.Keys)
+            foreach (string id in EmbassiesCheckers.Keys)
             {
                 var disposable = EmbassiesCheckers[id] as IDisposable;
                 disposable?.Dispose();
@@ -56,13 +57,12 @@ namespace VisaCheckerBotService
                 new FileStreamStorageService("Errors.txt").Save(Errors.BuildString());
             }
             catch { }
-            // SelfActivator?.Dispose();
         }
 
         #endregion
 
         #region Telegram bot logic
-
+        
         private const string TelegramBotToken = "";
 
         private static readonly string SubscribeMessageDescription = MessageTypes.Subscribe.GetDescription();
@@ -100,12 +100,12 @@ namespace VisaCheckerBotService
             string response;
             long chatID = e.Message.Chat.Id;
             string message = e.Message.Text.ToLower();
-            if(message.StartsWith(SubscribeMessageDescription))
+            if (message.StartsWith(SubscribeMessageDescription))
             {
                 message = message.Replace(SubscribeMessageDescription + " ", "").ToUpper();
                 try
                 {
-                    if(Subscribe(message, chatID))
+                    if (Subscribe(message, chatID))
                     {
                         response = "You were successfully subscribed.";
                     }
@@ -119,12 +119,12 @@ namespace VisaCheckerBotService
                     response = IncorrectQueryResponse;
                 }
             }
-            else if(message.StartsWith(UnsubscribeMessageDescription))
+            else if (message.StartsWith(UnsubscribeMessageDescription))
             {
                 message = message.Replace(UnsubscribeMessageDescription + " ", "").ToUpper();
                 try
                 {
-                    if(Unsubscribe(message, chatID))
+                    if (Unsubscribe(message, chatID))
                     {
                         response = "You were successfully unsubscribed.";
                     }
@@ -153,11 +153,11 @@ namespace VisaCheckerBotService
                         response = string.Format("There are no free dates for {0} embassy.", message);
                     }
                 }
-                catch(KeyNotFoundException)
+                catch (KeyNotFoundException)
                 {
                     response = IncorrectQueryResponse;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     response = "Unable to fetch free dates. Reason: " + ex.Message;
                 }
@@ -186,7 +186,7 @@ namespace VisaCheckerBotService
                     response = "Unable to fetch busy dates. Reason: " + ex.Message;
                 }
             }
-            else if(message.StartsWith(LastUpdateMessageDescription))
+            else if (message.StartsWith(LastUpdateMessageDescription))
             {
                 message = message.Replace(LastUpdateMessageDescription + " ", "").ToUpper();
                 try
@@ -198,11 +198,11 @@ namespace VisaCheckerBotService
                     response = IncorrectQueryResponse;
                 }
             }
-            else if(message == HelpMessageDescription)
+            else if (message == HelpMessageDescription)
             {
                 response = HelpMessageResponse;
             }
-            else if(message == AvailableVisasMessageDescription)
+            else if (message == AvailableVisasMessageDescription)
             {
                 List<string> registered = GetRegisteredEmbassies();
                 if (registered.Count != 0)
@@ -225,20 +225,6 @@ namespace VisaCheckerBotService
 
         #region Logic
 
-        //private Timer SelfActivator { get; set; }
-
-        //private void SelfActivate(object state)
-        //{
-        //    try
-        //    {
-        //        using (var client = new WebClient())
-        //        {
-        //            client.DownloadData("http://visachecker.somee.com/");
-        //        }
-        //    }
-        //    catch { }
-        //}
-
         private Dictionary<string, VisaChecker> EmbassiesCheckers;
 
         private List<string> Errors = new List<string>();
@@ -249,7 +235,7 @@ namespace VisaCheckerBotService
             {
                 await Bot.SendTextMessageAsync(args.ID, string.Format("There are free dates to {0} embassy. Hurry up to book the ticket!", args.CountryIdentifier));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Errors.Add("Unable to send text message. Reason: " + ex.Message);
             }
@@ -257,6 +243,7 @@ namespace VisaCheckerBotService
 
         private void ErrorOccured(object sender, ErrorEventArgs e)
         {
+            // TODO: Pass errors to the view (currently do not know which way would be better).
             Errors.Add(string.Format("{0}. Sender: {1}", e, sender));
         }
 
@@ -281,7 +268,7 @@ namespace VisaCheckerBotService
 
         public long GetTimeout(string embassy)
         {
-            if(EmbassiesCheckers.ContainsKey(embassy))
+            if (EmbassiesCheckers.ContainsKey(embassy))
             {
                 return EmbassiesCheckers[embassy].Timeout;
             }
@@ -290,7 +277,7 @@ namespace VisaCheckerBotService
 
         public void LoadAll()
         {
-            foreach(string id in EmbassiesCheckers.Keys)
+            foreach (string id in EmbassiesCheckers.Keys)
             {
                 EmbassiesCheckers[id].Load(new FileStreamStorageService(id));
             }
@@ -314,7 +301,7 @@ namespace VisaCheckerBotService
 
         public void Save(string embassy)
         {
-            if(EmbassiesCheckers.ContainsKey(embassy))
+            if (EmbassiesCheckers.ContainsKey(embassy))
             {
                 EmbassiesCheckers[embassy].Save(new FileStreamStorageService(embassy));
             }
@@ -322,10 +309,23 @@ namespace VisaCheckerBotService
 
         public void SetTimeout(string embassy, long value)
         {
-            if(EmbassiesCheckers.ContainsKey(embassy))
+            if (EmbassiesCheckers.ContainsKey(embassy))
             {
                 EmbassiesCheckers[embassy].Timeout = value;
             }
+        }
+
+        public Schedule GetSchedule(string embassy)
+        {
+            if (EmbassiesCheckers.ContainsKey(embassy))
+                return EmbassiesCheckers[embassy].Schedule;
+            return new Schedule(0, 0);
+        }
+
+        public void SetSchedule(string embassy, Schedule value)
+        {
+            if (EmbassiesCheckers.ContainsKey(embassy))
+                EmbassiesCheckers[embassy].Schedule = value;
         }
 
         public bool Subscribe(string embassy, long id)

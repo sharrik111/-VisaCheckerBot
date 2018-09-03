@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Checkers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -50,6 +51,10 @@ namespace DesktopManagerApplication.ViewModels.MainWindow
             {
                 selectedEmbassy = value;
                 OnPropertyChanged();
+                // Update timeout and schedule on the view.
+                OnPropertyChanged(nameof(Timeout));
+                OnPropertyChanged(nameof(FromHours));
+                OnPropertyChanged(nameof(ToHours));
                 Update();
             }
         }
@@ -125,6 +130,66 @@ namespace DesktopManagerApplication.ViewModels.MainWindow
                     Error = ex.Message;
                 }
                 OnPropertyChanged();
+            }
+        }
+
+        
+        public int FromHours
+        {
+            get
+            {
+                if (SelectedEmbassy == null)
+                    return 0;
+                return service.GetSchedule(SelectedEmbassy).StartHour;
+            }
+            set
+            {
+                Error = string.Empty;
+                if (SelectedEmbassy == null)
+                    Error = "Embassy is not selected.";
+                else
+                {
+                    try
+                    {
+                        var schedule = new Schedule(value, ToHours);
+                        service.SetSchedule(SelectedEmbassy, schedule);
+                        OnPropertyChanged();
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Error: " + e.Message;
+                    }
+                }
+            }
+        }
+
+        
+        public int ToHours
+        {
+            get
+            {
+                if (SelectedEmbassy == null)
+                    return 0;
+                return service.GetSchedule(SelectedEmbassy).FinishHour;
+            }
+            set
+            {
+                Error = string.Empty;
+                if (SelectedEmbassy == null)
+                    Error = "Embassy is not selected.";
+                else
+                {
+                    try
+                    {
+                        var schedule = new Schedule(FromHours, value);
+                        service.SetSchedule(SelectedEmbassy, schedule);
+                        OnPropertyChanged();
+                    }
+                    catch (Exception e)
+                    {
+                        Error = "Error: " + e.Message;
+                    }
+                }
             }
         }
 

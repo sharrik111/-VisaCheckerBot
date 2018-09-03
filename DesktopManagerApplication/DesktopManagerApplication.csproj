@@ -101,6 +101,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Checkers\Checkers.csproj">
+      <Project>{fca3631f-0352-41fc-8b4c-16a44d87e301}</Project>
+      <Name>Checkers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DesktopManagerApplication.ViewModels\DesktopManagerApplication.ViewModels.csproj">
       <Project>{d6576b62-8ba9-45e8-a128-573d2eaf0bfa}</Project>
       <Name>DesktopManagerApplication.ViewModels</Name>

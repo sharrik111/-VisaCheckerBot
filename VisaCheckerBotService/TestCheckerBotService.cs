@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Checkers;
 
 namespace VisaCheckerBotService
 {
@@ -35,6 +36,11 @@ namespace VisaCheckerBotService
             return new List<string> { "Embassy1", "Embassy2" };
         }
 
+        public Schedule GetSchedule(string embassy)
+        {
+            throw new NotImplementedException();
+        }
+
         public long GetTimeout(string embassy)
         {
             return timeout;
@@ -58,6 +64,11 @@ namespace VisaCheckerBotService
         public void SaveAll()
         {
             return;
+        }
+
+        public void SetSchedule(string embassy, Schedule value)
+        {
+            throw new NotImplementedException();
         }
 
         public void SetTimeout(string embassy, long value)

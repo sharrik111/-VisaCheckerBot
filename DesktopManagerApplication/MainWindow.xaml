@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopManagerApplication"
         mc:Ignorable="d"
-                           DataContext="{StaticResource MainWindowViewModel}"
+        DataContext="{StaticResource MainWindowViewModel}"
         Title="Manager application" Height="350" Width="525">
     <metroControls:MetroWindow.Resources>
         <Image x:Key="RefreshImage" Source="Resources/Refresh.png" Height="15"
@@ -49,6 +49,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -59,19 +60,31 @@
                 Grid.ColumnSpan="2"
                 Foreground="Red"
                        Text="{Binding Error, Mode=OneWay}"/>
-            <ComboBox Grid.Row="1"
+            <ComboBox Grid.Row="2"
                       Margin="0 5"
                       ItemsSource="{Binding RegisteredEmbassies, Mode=OneTime}"
                       SelectedItem="{Binding SelectedEmbassy}"
                       HorizontalAlignment="Stretch"
                       />
             <TextBox Text="{Binding Timeout, UpdateSourceTrigger=PropertyChanged, Delay=1000}"
-                     Grid.Row="1"
+                     Grid.Row="2"
                      Grid.Column="1"
                      HorizontalAlignment="Right"
                      Margin="5"
                      Width="100"/>
-            <Grid Grid.Row="2"
+            <StackPanel Grid.Row="1">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="From: "/>
+                    <metroControls:NumericUpDown Interval="1" HasDecimals="False" Minimum="0" Maximum="24"
+                                                 Value="{Binding FromHours}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="To:"/>
+                    <metroControls:NumericUpDown Interval="1" HasDecimals="False" Minimum="0" Maximum="24"
+                                                 Value="{Binding ToHours}"/>
+                </StackPanel>
+            </StackPanel>
+            <Grid Grid.Row="3"
                         Margin="0 5">
                 <Grid.RowDefinitions>
                     <RowDefinition/>

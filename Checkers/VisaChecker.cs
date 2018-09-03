@@ -15,6 +15,7 @@ namespace Checkers
         {
             Callback = callback;
             Timeout = timeout;
+            Schedule = new Schedule(0, 0);
         }
 
         #endregion
@@ -37,6 +38,8 @@ namespace Checkers
         }
 
         public DateTime LastUpdate { get; protected set; }
+
+        public Schedule Schedule { get; set; }
 
         protected List<string> BusyDates { get; set; } = new List<string>();
 
@@ -71,9 +74,19 @@ namespace Checkers
 
         public abstract bool Unsubscribe(long id);
 
-        public abstract void Save(IStorageService service);
+        public virtual void Save(IStorageService service)
+        {
+            service.Save(subscribers.BuildString());
+        }
 
-        public abstract void Load(IStorageService service);
+        public virtual void Load(IStorageService service)
+        {
+            string subscribersString = service.Load();
+            foreach (string id in subscribersString.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                subscribers.Add(Convert.ToInt64(id));
+            }
+        }
 
         public virtual List<string> GetBusyDates()
         {

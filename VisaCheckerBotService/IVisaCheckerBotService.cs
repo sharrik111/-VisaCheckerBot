@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Checkers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -43,6 +44,13 @@ namespace VisaCheckerBotService
 
         [OperationContract]
         void SetTimeout(string embassy, long value);
+
+        // It's useless to set Schedule as a data contract because we're already not using WCF service as needed.
+        [OperationContract]
+        Schedule GetSchedule(string embassy);
+
+        [OperationContract]
+        void SetSchedule(string embassy, Schedule value);
 
         [OperationContract]
         DateTime GetLastUpdate(string embassy);

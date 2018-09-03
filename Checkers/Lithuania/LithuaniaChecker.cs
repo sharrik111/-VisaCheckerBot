@@ -31,9 +31,13 @@ namespace Checkers.Lithuania
 
         private const string RequestBusyDates = RequestBaseAddress + "_d=&_aby=3&_cry=6&_c=1&_b=1";
 
+        private const int BlockMultiplier = 2;
+
         #endregion
 
         #region Properties
+
+        private long modifiedTimeout = 0;
 
         private Timer Timer { get; set; }
 
@@ -59,55 +63,57 @@ namespace Checkers.Lithuania
             return subscribers.Remove(id);
         }
 
-        public override void Save(IStorageService service)
-        {
-            StringBuilder stringToSave = new StringBuilder();
-            subscribers.ToList().ForEach(id => stringToSave.Append(id + "\n"));
-            service.Save(stringToSave.ToString());
-        }
-
-        public override void Load(IStorageService service)
-        {
-            string subscribersList = service.Load();
-            foreach(string id in subscribersList.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                subscribers.Add(Convert.ToInt64(id));
-            }
-        }
-
         private void Request(object state)
         {
-            using (var client = new WebClient())
+            bool blocked = false;
+            // Add 'From' < 'To' and check the DateTime.Now with the gate. If outside of the gate - return.
+            if (Schedule.StartHour == Schedule.FinishHour || (DateTime.Now.Hour >= Schedule.StartHour && DateTime.Now.Hour < Schedule.FinishHour))
             {
-                // client.Proxy = new WebProxy("46.251.49.21", 8080) { BypassProxyOnLocal = false };
-                client.Headers.Add("X-Requested-With", "XMLHttpRequest");
-                try
+                using (var client = new WebClient())
                 {
-                    var response = client.DownloadString(RequestFreeDates);
-                    var freeDatesResponse = JsonConvert.DeserializeObject<List<string>>(response);
-                    freeDatesResponse.RemoveEmptyItems();
-                    FreeDates = freeDatesResponse;
-                    OnFreeDatesNotify(Identifier);
-                    LastUpdate = DateTime.Now;
-                }
-                catch (Exception e)
-                {
-                    OnErrorOccured("Fetching free dates error: " + e.Message);
-                }
-                try
-                {
-                    var response = client.DownloadString(RequestBusyDates);
-                    var busyDatesResponse = JsonConvert.DeserializeObject<List<string>>(response);
-                    busyDatesResponse.RemoveEmptyItems();
-                    BusyDates = busyDatesResponse;
-                }
-                catch (Exception e)
-                {
-                    // BusyDates.Add("Fetching busy dates error: " + e.Message);
-                    OnErrorOccured("Fetching busy dates error: " + e.Message);
+                    // Using proxy is a great idea but the list of Belarusian proxies are not so wide.
+                    // Scanning free proxies lists on the Internet will make the code a bit harder so it
+                    // is an idea for the future.
+                    //client.Proxy = new WebProxy("86.57.135.124", 41258)
+                    //{
+                    //    BypassProxyOnLocal = false
+                    //};
+                    // Currently the next scheme is used (based on user experience):
+                    // 1) In case of blocking - Increase timeout with multiplier.
+                    client.Headers.Add("X-Requested-With", "XMLHttpRequest");
+                    try
+                    {
+                        var response = client.DownloadString(RequestFreeDates);
+                        var freeDatesResponse = JsonConvert.DeserializeObject<List<string>>(response);
+                        freeDatesResponse.RemoveEmptyItems();
+                        FreeDates = freeDatesResponse;
+                        OnFreeDatesNotify(Identifier);
+                        LastUpdate = DateTime.Now;
+                    }
+                    catch (Exception e)
+                    {
+                        blocked = true;
+                        OnErrorOccured("Fetching free dates error: " + e.Message);
+                    }
+                    if (!blocked)
+                    {
+                        // If the bot is blocked there is no sense to make an additional request.
+                        try
+                        {
+                            var response = client.DownloadString(RequestBusyDates);
+                            var busyDatesResponse = JsonConvert.DeserializeObject<List<string>>(response);
+                            busyDatesResponse.RemoveEmptyItems();
+                            BusyDates = busyDatesResponse;
+                        }
+                        catch (Exception e)
+                        {
+                            OnErrorOccured("Fetching busy dates error: " + e.Message);
+                        }
+                    }
                 }
             }
-            Timer?.Change(Timeout, Timeout);
+            modifiedTimeout = blocked ? modifiedTimeout  * BlockMultiplier : Timeout;
+            Timer?.Change(modifiedTimeout, modifiedTimeout);
         }
 
         #endregion
@@ -116,8 +122,17 @@ namespace Checkers.Lithuania
 
         public void Dispose()
         {
-            Timer?.Dispose();
-            Timer = null;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if(disposing)
+            {
+                Timer?.Dispose();
+                Timer = null;
+            }
         }
 
         #endregion
