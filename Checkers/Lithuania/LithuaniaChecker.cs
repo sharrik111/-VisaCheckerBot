@@ -17,6 +17,7 @@ namespace Checkers.Lithuania
         public LithuaniaChecker(NotifySubscriberCallback callback, long timeout = 300000) : base(callback, timeout)
         {
             Timer = new Timer(Request, null, 0L, timeout);
+            modifiedTimeout = timeout;
         }
 
         #endregion
@@ -37,7 +38,7 @@ namespace Checkers.Lithuania
 
         #region Properties
 
-        private long modifiedTimeout = 0;
+        private long modifiedTimeout;
 
         private Timer Timer { get; set; }
 
