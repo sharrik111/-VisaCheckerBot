@@ -25,6 +25,9 @@ namespace VisaCheckerBotService
         List<string> GetFreeDates(string embassy);
 
         [OperationContract]
+        int GetSubscribersCount(string embassy);
+
+        [OperationContract]
         List<string> GetRegisteredEmbassies();
 
         [OperationContract]

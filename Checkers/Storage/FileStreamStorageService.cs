@@ -11,13 +11,14 @@ namespace Checkers.Storage
     {
         #region Ctors
 
-        public FileStreamStorageService(string filename)
+        public FileStreamStorageService(string filename, bool append = false)
         {
             if(string.IsNullOrEmpty(filename))
             {
                 throw new ArgumentException("Parameter is null or empty.", "filename");
             }
             Filename = filename;
+            this.append = append;
         }
 
         #endregion
@@ -25,6 +26,8 @@ namespace Checkers.Storage
         #region Properties
 
         private string Filename { get; set; }
+
+        private bool append = false;
 
         #endregion
 
@@ -49,7 +52,7 @@ namespace Checkers.Storage
         {
             try
             {
-                using (var writer = new StreamWriter(Filename))
+                using (var writer = new StreamWriter(Filename, append))
                 {
                     writer.Write(content);
                 }

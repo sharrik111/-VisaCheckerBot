@@ -41,6 +41,11 @@ namespace VisaCheckerBotService
             throw new NotImplementedException();
         }
 
+        public int GetSubscribersCount(string embassy)
+        {
+            throw new NotImplementedException();
+        }
+
         public long GetTimeout(string embassy)
         {
             return timeout;

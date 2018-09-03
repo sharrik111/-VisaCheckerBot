@@ -20,6 +20,7 @@ namespace DesktopManagerApplication.ViewModels.MainWindow
             // Initialization process...
             RegisteredEmbassies = service.GetRegisteredEmbassies();
             BusyDatesCommand = new ParameterlessDelegateCommand(UpdateBusyDates);
+            SubscribersCountCommand = new ParameterlessDelegateCommand(UpdateSubscribersCount);
             FreeDatesCommand = new ParameterlessDelegateCommand(UpdateFreeDates);
             LastUpdateCommand = new ParameterlessDelegateCommand(UpdateLastUpdateTime);
             SaveCommand = new ParameterlessDelegateCommand(SaveCallback);
@@ -73,6 +74,8 @@ namespace DesktopManagerApplication.ViewModels.MainWindow
 
         public ParameterlessDelegateCommand BusyDatesCommand { get; private set; }
 
+        public ParameterlessDelegateCommand SubscribersCountCommand { get; private set; }
+
         private List<string> freeDates = null;
 
         public List<string> FreeDates
@@ -82,6 +85,16 @@ namespace DesktopManagerApplication.ViewModels.MainWindow
             {
                 freeDates = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public int SubscribersCount
+        {
+            get
+            {
+                if (SelectedEmbassy == null)
+                    return 0;
+                return service.GetSubscribersCount(SelectedEmbassy);
             }
         }
 
@@ -221,6 +234,7 @@ namespace DesktopManagerApplication.ViewModels.MainWindow
             UpdateBusyDates();
             UpdateFreeDates();
             UpdateLastUpdateTime();
+            UpdateSubscribersCount();
         }
 
         private void UpdateBusyDates()
@@ -245,6 +259,11 @@ namespace DesktopManagerApplication.ViewModels.MainWindow
             {
                 LastUpdate = service.GetLastUpdate(SelectedEmbassy);
             }
+        }
+
+        private void UpdateSubscribersCount()
+        {
+            OnPropertyChanged(nameof(SubscribersCount));
         }
 
         private void SaveCallback()

@@ -52,11 +52,6 @@ namespace VisaCheckerBotService
                 var disposable = EmbassiesCheckers[id] as IDisposable;
                 disposable?.Dispose();
             }
-            try
-            {
-                new FileStreamStorageService("Errors.txt").Save(Errors.BuildString());
-            }
-            catch { }
         }
 
         #endregion
@@ -79,7 +74,7 @@ namespace VisaCheckerBotService
 
         private static readonly string AvailableVisasMessageDescription = MessageTypes.AvailableVisas.GetDescription();
 
-        private const string IncorrectQueryResponse = "Unable to determine your query. Use help to get more information.";
+        private const string IncorrectQueryResponse = "Unable to determine your query. Use '/help' to get more information.";
 
         private static readonly string HelpMessageResponse = string.Format("Commands available:\n" +
             "{0} <embassyIdentifier> - subscribes to free dates notifications to the specified embassy.\n" +
@@ -243,8 +238,17 @@ namespace VisaCheckerBotService
 
         private void ErrorOccured(object sender, ErrorEventArgs e)
         {
-            // TODO: Pass errors to the view (currently do not know which way would be better).
             Errors.Add(string.Format("{0}. Sender: {1}", e, sender));
+            SaveErrors();
+        }
+
+        private void SaveErrors()
+        {
+            try
+            {
+                new FileStreamStorageService("Errors.txt", true).Save(Errors.BuildString());
+            }
+            catch { }
         }
 
         #endregion
@@ -259,6 +263,13 @@ namespace VisaCheckerBotService
         public List<string> GetFreeDates(string embassy)
         {
             return EmbassiesCheckers[embassy].GetFreeDates();
+        }
+
+        public int GetSubscribersCount(string embassy)
+        {
+            if (!EmbassiesCheckers.ContainsKey(embassy))
+                return 0;
+            return EmbassiesCheckers[embassy].SubscribersCount;
         }
 
         public List<string> GetRegisteredEmbassies()

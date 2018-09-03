@@ -84,6 +84,14 @@
                                                  Value="{Binding ToHours}"/>
                 </StackPanel>
             </StackPanel>
+            <StackPanel Grid.Row="1"
+                       Grid.Column="1"
+                        Orientation="Horizontal">
+                <TextBlock Text="{Binding SubscribersCount, StringFormat=Subscribers: {0}}"/>
+                <Button Style="{StaticResource ImageButton}"
+                            Command="{Binding SubscribersCountCommand}"
+                        Margin="5 0"/>
+            </StackPanel>
             <Grid Grid.Row="3"
                         Margin="0 5">
                 <Grid.RowDefinitions>

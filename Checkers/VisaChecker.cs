@@ -49,6 +49,8 @@ namespace Checkers
 
         protected HashSet<long> subscribers = new HashSet<long>();
 
+        public int SubscribersCount => subscribers.Count;
+
         public event ErrorEventHandler ErrorOccured;
 
         #endregion
@@ -81,6 +83,7 @@ namespace Checkers
 
         public virtual void Load(IStorageService service)
         {
+            subscribers.Clear();
             string subscribersString = service.Load();
             foreach (string id in subscribersString.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
             {
